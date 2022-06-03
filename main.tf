@@ -8,12 +8,12 @@ terraform {
 }
 
 provider "docker" {
-  host = "tcp://$DOCKER_SERVER_HOST:$DOCKER_SERVER_PORT"
-
+  host = var.DOCKER_SERVER
+  
   registry_auth {
     address  = "registry-1.docker.io"
-    username = "$DOCKER_USERNAME"
-    password = "$DOCKER_PASSWORD"
+    username = var.DOCKER_REGISTRY_USERNAME
+    password = var.DOCKER_REGISTRY_PASSWORD
   }
 }
 
@@ -23,7 +23,7 @@ resource "docker_image" "zeraph-api" {
 
 resource "docker_container" "zeraph-api" {
   image = docker_image.zeraph-api.latest
-  name = "zeraph-api"
+  name = var.APP_NAME
 
   env = [
     "HOST=${var.HOST}",
@@ -40,7 +40,7 @@ resource "docker_container" "zeraph-api" {
   ]
 
   ports {
-    internal = 3333
-    external = 3333
+    internal = var.PORT
+    external = var.PORT
   }
 }
